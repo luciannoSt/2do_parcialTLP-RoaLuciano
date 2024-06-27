@@ -50,11 +50,36 @@ app.post('/libros', (req,res) => {
         else{
             libros.push(libroCargar);
             console.log(` el libro se ha agregado correctamente.`);
-            res.json({message: "el libro se agrego correctamente"})
+            res.json({mensaje: "el libro se agrego correctamente"})
         }
 });
 
+//PUT para modificar los datos de un libro
 
+app.put('/libros/:id', (req,res) => {
+    const id= req.params.id;
+    const libroCargar=req.body;
+
+    const libro = libros.find(libro => libro.id === parseInt(id));
+    if(!libro){
+        return res.status(404).json({mensaje:`Libro con id ${id} no encontrado`});
+    }
+    if(libroCargar.id!== undefined){
+        console.log(`El id no puede ser modificado.`);
+        return res.status(400).json({mensaje:'El id no puede ser modificado'});
+    }
+    const encontrarTit = libros.find(libro => libroCargar.titulo === libro.titulo);
+    if (encontrarTit) {
+        console.log(`el libro con el mismo titulo ya existe.`);
+        return res.status(400).json({mensaje:'El libro con el mismo titulo ya existe'});
+    }
+    
+    libro.titulo=libroCargar.titulo || libro.titulo;
+    libro.autor=libroCargar.autor || libro.autor;
+    libro.year=libroCargar.year || libro.year;
+
+    res.json({mensaje :"el libro se modifico correctamente"});
+});
 
 
 app.listen(3000,(req,res) => {
