@@ -73,12 +73,25 @@ app.put('/libros/:id', (req,res) => {
         console.log(`el libro con el mismo titulo ya existe.`);
         return res.status(400).json({mensaje:'El libro con el mismo titulo ya existe'});
     }
-    
+
     libro.titulo=libroCargar.titulo || libro.titulo;
     libro.autor=libroCargar.autor || libro.autor;
     libro.year=libroCargar.year || libro.year;
 
     res.json({mensaje :"el libro se modifico correctamente"});
+});
+
+//Delete para poder eliminar un libro
+
+app.delete('/libros/:id', (req,res) => {
+    const id= req.params.id;
+    const libro = libros.find(libro => libro.id === parseInt(id));
+    if(!libro){
+        return res.status(404).json({mensaje:`Libro con id ${id} no encontrado`});
+    }
+    const index = libros.indexOf(libro);
+    libros.splice(index, 1);
+    res.json({mensaje: "El libro se ha eliminado correctamente"});
 });
 
 
