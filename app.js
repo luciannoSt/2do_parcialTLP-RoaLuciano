@@ -27,7 +27,34 @@ app.get('/libros/:id', (req,res) => {
     res.json(libro);
 });
 
-//
+//Post para añadir un nuevo libro al array
+
+app.post('/libros', (req,res) => {
+    const libroCargar=req.body;
+    const idLibro=req.body.id;
+    console.log(libroCargar);
+    if(libroCargar.id === undefined || libroCargar.titulo === undefined || libroCargar.year === undefined){
+        return res.status(400).json({mensaje:'Todos los campos son necesarios'});
+    }
+    const encontrada = libros.find(libro => libroCargar.titulo === libro.titulo);
+    const encontrarID= libros.find(libro => idLibro === parseInt(libro.id))
+
+    if (encontrada) {
+        console.log(`el libro ya esta agregado.`);
+        return res.status(400).json({mensaje:'El libro ya esta agregado'});
+    }
+        if(encontrarID){
+            console.log(`El id ya esta en uso.`);
+            return res.status(400).json({mensaje:'El id ya esta en uso'});
+        }
+        else{
+            libros.push(libroCargar);
+            console.log(` el libro se ha agregado correctamente.`);
+            res.json({message: "el libro se agrego correctamente"})
+        }
+});
+
+
 
 
 app.listen(3000,(req,res) => {
